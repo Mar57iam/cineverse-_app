@@ -1,1 +1,147 @@
-<p>navbar works!</p>
+<header class="navbar-shell px-3 pt-3 sm:px-5 sm:pt-5 lg:px-8">
+  <div
+    class="navbar-frame relative mx-auto flex max-w-[1480px] items-center justify-between gap-3 rounded-full border border-amber-100/10 bg-[#10100e]/85 px-4 py-3 shadow-[0_18px_70px_rgba(0,0,0,0.48)] backdrop-blur-2xl sm:gap-5 sm:px-6"
+  >
+    <span class="navbar-topline" aria-hidden="true"></span>
+
+    <a class="brand group flex shrink-0 items-center gap-3" routerLink="/home" (click)="closePanels()">
+      <span
+        class="brand-mark flex size-11 items-center justify-center rounded-xl text-white shadow-[0_0_28px_rgba(245,158,11,0.32)]"
+      >
+        <svg lucideClapperboard class="size-5"></svg>
+      </span>
+      <span class="brand-wordmark flex flex-col leading-none">
+        <span class="text-[1.05rem] font-black tracking-[0.14em] text-white sm:text-lg">
+          CINE<span class="brand-accent">VERSE</span>
+        </span>
+      </span>
+    </a>
+
+    <nav class="desktop-nav hidden items-center gap-1 lg:flex" aria-label="Main navigation">
+      <a
+        class="nav-link"
+        routerLink="/home"
+        routerLinkActive="nav-link-active"
+        [routerLinkActiveOptions]="{ exact: true }"
+        ariaCurrentWhenActive="page"
+        (click)="closePanels()"
+      >
+        <svg lucideHouse class="size-4"></svg>
+        <span>Home</span>
+      </a>
+      <a class="nav-link" routerLink="/movies" routerLinkActive="nav-link-active" ariaCurrentWhenActive="page" (click)="closePanels()">
+        <svg lucideClapperboard class="size-4"></svg>
+        <span>Movies</span>
+      </a>
+      <a class="nav-link" routerLink="/tv-shows" routerLinkActive="nav-link-active" ariaCurrentWhenActive="page" (click)="closePanels()">
+        <svg lucideTv class="size-4"></svg>
+        <span>TV Shows</span>
+      </a>
+      <a class="nav-link" routerLink="/watchlist" routerLinkActive="nav-link-active" ariaCurrentWhenActive="page" (click)="closePanels()">
+        <svg lucideBookmark class="size-4"></svg>
+        <span>Watchlist</span>
+      </a>
+    </nav>
+
+    <div class="navbar-actions flex shrink-0 items-center gap-2 sm:gap-3">
+      <div class="search-box hidden items-center gap-3 rounded-xl px-3.5 lg:flex xl:w-60">
+        <svg lucideSearch class="size-[18px] shrink-0 text-amber-200"></svg>
+        <input
+          #desktopSearch
+          class="min-w-0 flex-1 bg-transparent text-sm text-white outline-none placeholder:text-white/35"
+          type="search"
+          aria-label="Search movies and TV shows"
+          placeholder="Search anything..."
+          (keydown.enter)="navigateToSearch(desktopSearch.value)"
+        />
+        <kbd class="hidden rounded-md border border-white/10 px-1.5 py-1 text-[10px] text-white/35 xl:inline">
+          /
+        </kbd>
+      </div>
+
+      <button
+        class="icon-button lg:hidden"
+        type="button"
+        aria-label="Open search"
+        [attr.aria-expanded]="searchOpen()"
+        aria-controls="mobile-search"
+        (click)="toggleSearch()"
+      >
+        <svg lucideSearch class="size-[18px]"></svg>
+      </button>
+
+      <button class="profile-button group" type="button" aria-label="Profile">
+        <span class="profile-avatar">
+          <svg lucideUserRound class="size-[18px]"></svg>
+        </span>
+        <span class="profile-dot" aria-hidden="true"></span>
+      </button>
+
+      <button
+        class="icon-button lg:hidden"
+        type="button"
+        [attr.aria-label]="menuOpen() ? 'Close navigation menu' : 'Open navigation menu'"
+        [attr.aria-expanded]="menuOpen()"
+        aria-controls="mobile-navigation"
+        (click)="toggleMenu()"
+      >
+        @if (menuOpen()) {
+          <svg lucideX class="size-5"></svg>
+        } @else {
+          <svg lucideMenu class="size-5"></svg>
+        }
+      </button>
+    </div>
+  </div>
+
+  @if (searchOpen()) {
+    <div id="mobile-search" class="mobile-panel mx-auto mt-3 max-w-[1480px] rounded-2xl p-3 lg:hidden">
+      <div class="search-box flex items-center gap-3 rounded-xl px-3.5 py-3">
+        <svg lucideSearch class="size-[18px] shrink-0 text-amber-200"></svg>
+        <input
+          #mobileSearch
+          class="min-w-0 flex-1 bg-transparent text-sm text-white outline-none placeholder:text-white/35"
+          type="search"
+          aria-label="Search movies and TV shows"
+          placeholder="Search movies, shows..."
+          autofocus
+          (keydown.enter)="navigateToSearch(mobileSearch.value)"
+        />
+      </div>
+    </div>
+  }
+
+  @if (menuOpen()) {
+    <div id="mobile-navigation" class="mobile-panel mx-auto mt-3 max-w-[1480px] rounded-2xl p-3 lg:hidden">
+      <nav class="grid gap-1" aria-label="Mobile navigation">
+        <a
+          class="nav-link"
+          routerLink="/home"
+          routerLinkActive="nav-link-active"
+          [routerLinkActiveOptions]="{ exact: true }"
+          ariaCurrentWhenActive="page"
+          (click)="closePanels()"
+        >
+          <svg lucideHouse class="size-4"></svg>
+          <span>Home</span>
+        </a>
+        <a class="nav-link" routerLink="/movies" routerLinkActive="nav-link-active" ariaCurrentWhenActive="page" (click)="closePanels()">
+          <svg lucideClapperboard class="size-4"></svg>
+          <span>Movies</span>
+        </a>
+        <a class="nav-link" routerLink="/tv-shows" routerLinkActive="nav-link-active" ariaCurrentWhenActive="page" (click)="closePanels()">
+          <svg lucideTv class="size-4"></svg>
+          <span>TV Shows</span>
+        </a>
+        <a class="nav-link" routerLink="/watchlist" routerLinkActive="nav-link-active" ariaCurrentWhenActive="page" (click)="closePanels()">
+          <svg lucideBookmark class="size-4"></svg>
+          <span>Watchlist</span>
+        </a>
+      </nav>
+      <div class="mt-3 flex items-center gap-2 border-t border-white/10 px-2 pt-3 text-xs text-white/45">
+        <span class="size-1.5 rounded-full bg-amber-300 shadow-[0_0_10px_rgba(252,211,77,0.8)]"></span>
+        Discover something extraordinary
+      </div>
+    </div>
+  }
+</header>

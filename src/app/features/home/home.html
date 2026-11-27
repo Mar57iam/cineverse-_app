@@ -1,1 +1,134 @@
-<p>home works!</p>
+<div class="home-page">
+  @if (isLoading()) {
+    <div class="page-state" role="status" aria-live="polite">
+      <span class="loading-spinner" aria-hidden="true"></span>
+      <span>Finding your next great story...</span>
+    </div>
+  } @else if (errorMessage(); as message) {
+    <div class="page-state page-error" role="alert">
+      <p>{{ message }}</p>
+      <button class="button-primary" type="button" (click)="loadHomePageData()">Try again</button>
+    </div>
+  } @else if (homeData(); as data) {
+    @if (featuredMovie(); as featured) {
+      <section class="hero relative overflow-hidden rounded-[1.75rem] sm:rounded-[2rem]" aria-labelledby="hero-title">
+        @if (featured.backdropPath || featured.posterPath) {
+          <img
+            class="hero-image"
+            [src]="movieService.getImageUrl(featured.backdropPath || featured.posterPath, 'original')"
+            [alt]="featured.title + ' cinematic backdrop'"
+            fetchpriority="high"
+          />
+        } @else {
+          <div class="hero-image hero-image-placeholder" aria-hidden="true"></div>
+        }
+        <div class="hero-shade" aria-hidden="true"></div>
+        <div class="hero-grain" aria-hidden="true"></div>
+
+        <div class="hero-content relative z-10 flex min-h-[34rem] flex-col justify-end px-6 pb-8 pt-16 sm:min-h-[39rem] sm:px-10 sm:pb-10 lg:min-h-[43rem] lg:px-14 lg:pb-14">
+          <div class="max-w-2xl">
+            <div class="mb-5 flex flex-wrap items-center gap-3">
+              <span class="eyebrow"><svg lucideSparkles class="size-3.5"></svg> TONIGHT'S FEATURE</span>
+              <span class="hero-divider"></span>
+              <span class="hero-caption">TRENDING RIGHT NOW</span>
+            </div>
+
+            <h1 id="hero-title" class="hero-title">{{ featured.title }}</h1>
+            <p class="hero-copy mt-4 max-w-xl">
+              {{ featured.overview || 'Discover a story worth staying in for.' }}
+            </p>
+
+            <div class="mt-5 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-white/75">
+              <span class="rating"><svg lucideStar class="size-4 fill-current"></svg> {{ featured.voteAverage | number: '1.1-1' }}</span>
+              <span class="meta-dot">{{ getYear(featured.releaseDate) }}</span>
+              <span class="hero-tag">{{ featured.mediaType === 'tv' ? 'TV Series' : 'Movie' }}</span>
+            </div>
+
+            <div class="mt-8 flex flex-wrap gap-3">
+              <button
+                class="button-primary"
+                type="button"
+                [attr.aria-pressed]="featuredSaved()"
+                (click)="toggleFeatured()"
+              >
+                @if (featuredSaved()) {
+                  <svg lucideCheck class="size-[18px]"></svg>
+                  Added to watchlist
+                } @else {
+                  <svg lucidePlus class="size-[18px]"></svg>
+                  Add to watchlist
+                }
+              </button>
+              <button class="button-secondary" type="button" (click)="scrollToMovies()">
+                Explore collection
+                <svg lucideArrowUpRight class="size-4"></svg>
+              </button>
+            </div>
+          </div>
+
+          <div class="hero-bottom mt-10 flex items-end justify-between gap-5">
+            <div class="flex items-center gap-2" aria-label="Featured movie from this week's trending list">
+              <span class="hero-progress hero-progress-active"></span>
+              <span class="ml-2 text-[0.68rem] font-semibold tracking-[0.16em] text-white/55">01 <span class="text-white/25">/ {{ data.trending.length }}</span></span>
+            </div>
+            <div class="hidden items-center gap-2 text-[0.68rem] font-semibold tracking-[0.18em] text-white/55 sm:flex">
+              <span class="size-1.5 rounded-full bg-amber-300 shadow-[0_0_12px_#fbbf24]"></span>
+              CURATED FOR MOVIE LOVERS
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-side-note" aria-hidden="true">CINEVERSE ORIGINAL SELECTION</div>
+      </section>
+    }
+
+    <div #trendingSection>
+      <app-media-section
+        sectionId="trending"
+        eyebrow="THE CROWD FAVOURITES"
+        title="Trending this week"
+        [items]="data.trending"
+        [savedMovieIds]="savedMovieIds()"
+        (movieToggled)="toggleMovie($event)"
+      />
+    </div>
+    <app-media-section
+      sectionId="popular"
+      eyebrow="WHAT EVERYONE IS WATCHING"
+      title="Popular movies"
+      [items]="data.popular"
+      [savedMovieIds]="savedMovieIds()"
+      (movieToggled)="toggleMovie($event)"
+    />
+    <app-media-section
+      sectionId="top-rated"
+      eyebrow="THE HIGHEST-RATED STORIES"
+      title="Top rated"
+      [items]="data.topRated"
+      [savedMovieIds]="savedMovieIds()"
+      (movieToggled)="toggleMovie($event)"
+    />
+    <app-media-section
+      sectionId="upcoming"
+      eyebrow="COMING TO THE BIG SCREEN"
+      title="Upcoming"
+      [items]="data.upcoming"
+      [savedMovieIds]="savedMovieIds()"
+      (movieToggled)="toggleMovie($event)"
+    />
+    <app-media-section
+      sectionId="popular-tv"
+      eyebrow="YOUR NEXT BINGE"
+      title="Popular TV Shows"
+      [items]="data.popularTv"
+      [savedMovieIds]="savedMovieIds()"
+      (movieToggled)="toggleMovie($event)"
+    />
+
+    @if (data.trending.length + data.popular.length + data.topRated.length + data.upcoming.length + data.popularTv.length === 0) {
+      <div class="page-state" role="status">No titles are available right now.</div>
+    }
+  }
+
+  <app-footer />
+</div>

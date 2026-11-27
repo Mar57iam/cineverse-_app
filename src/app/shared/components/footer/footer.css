@@ -1,0 +1,33 @@
+:host {
+  display: block;
+}
+
+.home-footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.7rem 1.5rem;
+  margin-top: 3rem;
+  border-top: 1px solid rgb(255 255 255 / 9%);
+  padding: 1.7rem 0 0.5rem;
+  color: rgb(255 255 255 / 43%);
+  font-size: 0.73rem;
+}
+
+.footer-brand {
+  color: #f6f1e6;
+  font-size: 0.8rem;
+  font-weight: 850;
+  letter-spacing: 0.14em;
+}
+
+.footer-brand span {
+  color: #d8aa55;
+}
+
+.footer-copyright {
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.13em;
+}

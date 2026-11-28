@@ -15,7 +15,7 @@
         @if (featured.backdropPath || featured.posterPath) {
           <img
             class="hero-image"
-            [src]="movieService.getImageUrl(featured.backdropPath || featured.posterPath, 'original')"
+            [src]="tmdbService.getImageUrl(featured.backdropPath || featured.posterPath, 'original')"
             [alt]="featured.title + ' cinematic backdrop'"
             fetchpriority="high"
           />

@@ -10,6 +10,7 @@ import {
 } from '@lucide/angular';
 import { HomePageData, TmdbItem } from '../../core/models/tmdb.model';
 import { MovieService } from '../../core/services/movie.service';
+import { TmdbService } from '../../core/services/tmdb.service';
 import { Footer } from '../../shared/components/footer/footer';
 import { MediaSection } from '../../shared/components/media-section/media-section';
 
@@ -21,6 +22,7 @@ import { MediaSection } from '../../shared/components/media-section/media-sectio
 })
 export class Home {
   readonly movieService = inject(MovieService);
+  readonly tmdbService = inject(TmdbService);
   readonly isLoading = signal(true);
   readonly errorMessage = signal<string | null>(null);
   readonly homeData = signal<HomePageData | null>(null);

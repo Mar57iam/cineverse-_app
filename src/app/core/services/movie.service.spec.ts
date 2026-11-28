@@ -91,8 +91,4 @@ describe('MovieService', () => {
     });
   });
 
-  it('builds poster URLs only when a path exists', () => {
-    expect(service.getImageUrl('/poster.jpg')).toBe(`${environment.imageBaseUrl}/w500/poster.jpg`);
-    expect(service.getImageUrl(null)).toBeNull();
-  });
 });

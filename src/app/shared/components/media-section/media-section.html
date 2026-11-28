@@ -19,45 +19,12 @@
 
     <div #slider class="media-carousel" [attr.aria-label]="title() + ' titles'" tabindex="0">
       @for (movie of items(); track movie.mediaType + ':' + movie.id) {
-        <article class="movie-card">
-          <div class="poster-wrap">
-            @if (movie.posterPath) {
-              <img
-                class="poster-image"
-                [src]="movieService.getImageUrl(movie.posterPath)"
-                [alt]="movie.title + ' poster'"
-                loading="lazy"
-              />
-            } @else {
-              <div class="poster-image poster-placeholder" aria-hidden="true">{{ movie.title }}</div>
-            }
-            <div class="poster-overlay"></div>
-            <span class="poster-rank">{{ $index + 1 | number: '2.0' }}</span>
-            <button
-              class="save-button"
-              type="button"
-              [attr.aria-label]="isSaved(movie) ? 'Remove ' + movie.title + ' from watchlist' : 'Add ' + movie.title + ' to watchlist'"
-              [attr.aria-pressed]="isSaved(movie)"
-              (click)="toggleSaved(movie)"
-            >
-              @if (isSaved(movie)) {
-                <svg lucideCheck class="size-[17px]"></svg>
-              } @else {
-                <svg lucidePlus class="size-[17px]"></svg>
-              }
-            </button>
-            <div class="poster-info">
-              <div class="poster-meta">
-                <svg lucideStar class="size-3.5 fill-current"></svg>
-                <span>{{ movie.voteAverage | number: '1.1-1' }}</span>
-                <span class="meta-separator">·</span>
-                <span>{{ movie.releaseDate.slice(0, 4) || '—' }}</span>
-              </div>
-              <h3 class="poster-title">{{ movie.title }}</h3>
-              <p class="poster-type">{{ movie.mediaType === 'tv' ? 'TV Series' : 'Movie' }}</p>
-            </div>
-          </div>
-        </article>
+        <app-movie-card
+          [movie]="movie"
+          [saved]="savedMovieIds().includes(movie.mediaType + ':' + movie.id)"
+          [rank]="$index + 1"
+          (watchlistToggled)="toggleSaved($event)"
+        />
       }
     </div>
   </section>

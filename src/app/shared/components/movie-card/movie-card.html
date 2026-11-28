@@ -1,1 +1,43 @@
-<p>movie-card works!</p>
+<article class="movie-card">
+  <a class="poster-link" [routerLink]="['/movies', movie().id]" [attr.aria-label]="'View details for ' + movie().title">
+    <div class="poster-wrap">
+      @if (movie().posterPath) {
+        <img
+          class="poster-image"
+          [src]="tmdbService.getImageUrl(movie().posterPath)"
+          [alt]="movie().title + ' poster'"
+          loading="lazy"
+        />
+      } @else {
+        <div class="poster-image poster-placeholder" aria-hidden="true">{{ movie().title }}</div>
+      }
+      <div class="poster-overlay"></div>
+      @if (rank() !== null) {
+        <span class="poster-rank">{{ rank()! | number: '2.0' }}</span>
+      }
+      <div class="poster-info">
+        <div class="poster-meta">
+          <svg lucideStar class="size-3.5 fill-current"></svg>
+          <span>{{ movie().voteAverage | number: '1.1-1' }}</span>
+          <span class="meta-separator">·</span>
+          <span>{{ movie().releaseDate.slice(0, 4) || '—' }}</span>
+        </div>
+        <h3 class="poster-title">{{ movie().title }}</h3>
+        <p class="poster-type">{{ movie().mediaType === 'tv' ? 'TV Series' : 'Movie' }}</p>
+      </div>
+    </div>
+  </a>
+  <button
+    class="save-button"
+    type="button"
+    [attr.aria-label]="saved() ? 'Remove ' + movie().title + ' from watchlist' : 'Add ' + movie().title + ' to watchlist'"
+    [attr.aria-pressed]="saved()"
+    (click)="toggleSaved($event)"
+  >
+    @if (saved()) {
+      <svg lucideCheck class="size-[17px]"></svg>
+    } @else {
+      <svg lucidePlus class="size-[17px]"></svg>
+    }
+  </button>
+</article>

@@ -1,4 +1,75 @@
-<section aria-labelledby="tv-details-title">
-  <p>TV SHOW DETAILS</p>
-  <h1 id="tv-details-title">TV Show {{ tvShowId() }}</h1>
-</section>
+<div class="tv-details-page">
+  @if (isLoading()) {
+    <div class="details-state" role="status" aria-live="polite">
+      <span class="loading-spinner" aria-hidden="true"></span>
+      <span>Loading series details...</span>
+    </div>
+  } @else if (errorMessage(); as message) {
+    <div class="details-state details-error" role="alert">
+      <h1>Unable to load this series</h1>
+      <p>{{ message }}</p>
+      <a class="back-link" routerLink="/tv-shows">
+        <svg lucideArrowLeft class="size-4"></svg>
+        Explore TV shows
+      </a>
+    </div>
+  } @else if (tvShow(); as show) {
+    <article class="tv-detail">
+      <div class="detail-backdrop">
+        @if (show.backdrop_path || show.poster_path) {
+          <img
+            [src]="tmdbService.getImageUrl(show.backdrop_path || show.poster_path, 'original')"
+            alt=""
+            aria-hidden="true"
+          />
+        }
+        <div class="detail-backdrop-shade"></div>
+      </div>
+
+      <div class="detail-content">
+        <a class="back-link" routerLink="/tv-shows">
+          <svg lucideArrowLeft class="size-4"></svg>
+          Back to TV shows
+        </a>
+
+        <p class="details-eyebrow">SERIES SPOTLIGHT</p>
+        <h1>{{ show.name }}</h1>
+        @if (show.tagline) {
+          <p class="detail-tagline">{{ show.tagline }}</p>
+        }
+
+        <div class="detail-meta">
+          <span class="detail-rating">
+            <svg lucideStar class="size-4 fill-current"></svg>
+            {{ show.vote_average | number: '1.1-1' }}
+          </span>
+          @if (show.first_air_date) {
+            <span>{{ show.first_air_date.slice(0, 4) }}</span>
+          }
+          @if (show.number_of_seasons) {
+            <span>{{ show.number_of_seasons }} {{ show.number_of_seasons === 1 ? 'season' : 'seasons' }}</span>
+          }
+          @if (show.number_of_episodes) {
+            <span>{{ show.number_of_episodes }} episodes</span>
+          }
+          @if (show.status) {
+            <span class="detail-status">{{ show.status }}</span>
+          }
+        </div>
+
+        @if (show.genres.length > 0) {
+          <ul class="detail-genres" aria-label="Genres">
+            @for (genre of show.genres; track genre.id) {
+              <li>{{ genre.name }}</li>
+            }
+          </ul>
+        }
+
+        <section class="detail-overview" aria-labelledby="overview-title">
+          <h2 id="overview-title">Overview</h2>
+          <p>{{ show.overview || 'No overview is available for this series yet.' }}</p>
+        </section>
+      </div>
+    </article>
+  }
+</div>

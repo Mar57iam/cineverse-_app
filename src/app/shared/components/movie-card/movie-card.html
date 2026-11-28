@@ -1,5 +1,9 @@
 <article class="movie-card">
-  <a class="poster-link" [routerLink]="['/movies', movie().id]" [attr.aria-label]="'View details for ' + movie().title">
+  <a
+    class="poster-link"
+    [routerLink]="movie().mediaType === 'tv' ? ['/tv-shows', movie().id] : ['/movies', movie().id]"
+    [attr.aria-label]="'View details for ' + movie().title"
+  >
     <div class="poster-wrap">
       @if (movie().posterPath) {
         <img

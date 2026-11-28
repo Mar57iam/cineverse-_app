@@ -2,9 +2,9 @@ import { HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable, map } from 'rxjs';
 import {
-  MovieFilters,
-  MovieGenre,
-  MoviePage,
+  CatalogFilters,
+  CatalogGenre,
+  CatalogPage,
   TmdbGenreResponse,
   TmdbItem,
   TmdbResponse,
@@ -18,13 +18,13 @@ import { TmdbService } from './tmdb.service';
 export class MovieCatalogService {
   private readonly tmdbService = inject(TmdbService);
 
-  getGenres(): Observable<MovieGenre[]> {
+  getGenres(): Observable<CatalogGenre[]> {
     return this.tmdbService
       .get<TmdbGenreResponse>('/genre/movie/list')
       .pipe(map((response) => response.genres));
   }
 
-  getMovies(filters: MovieFilters): Observable<MoviePage> {
+  getMovies(filters: CatalogFilters): Observable<CatalogPage> {
     const isSearch = Boolean(filters.query.trim());
     let params = new HttpParams().set('page', String(filters.page));
 
@@ -54,9 +54,9 @@ export class MovieCatalogService {
 
   private toMoviePage(
     response: TmdbResponse<TmdbResult>,
-    filters: MovieFilters,
+    filters: CatalogFilters,
     isSearch: boolean,
-  ): MoviePage {
+  ): CatalogPage {
     let results = response.results.map((result) => this.tmdbService.toMediaItem(result, 'movie'));
 
     if (isSearch) {

@@ -2,7 +2,7 @@ import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { environment } from '../../../environments/environment';
-import { MoviePage } from '../models/tmdb.model';
+import { CatalogPage } from '../models/tmdb.model';
 import { MovieCatalogService } from './movie-catalog.service';
 
 describe('MovieCatalogService', () => {
@@ -35,7 +35,7 @@ describe('MovieCatalogService', () => {
   });
 
   it('discovers movies using selected filters and maps pagination metadata', () => {
-    let response: MoviePage | undefined;
+    let response: CatalogPage | undefined;
     service
       .getMovies({
         query: '',
@@ -81,7 +81,7 @@ describe('MovieCatalogService', () => {
   });
 
   it('searches movie titles and applies genre, rating, and sort filters', () => {
-    let response: MoviePage | undefined;
+    let response: CatalogPage | undefined;
     service
       .getMovies({
         query: 'space',

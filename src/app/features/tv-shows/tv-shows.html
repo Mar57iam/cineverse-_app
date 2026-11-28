@@ -1,4 +1,149 @@
-<section aria-labelledby="tv-shows-title">
-  <p>EXPLORE THE SMALL SCREEN</p>
-  <h1 id="tv-shows-title">TV Shows</h1>
-</section>
+<div class="catalog-page">
+  <header class="movies-heading">
+    <p class="movies-eyebrow">YOUR NEXT GREAT STORY STARTS HERE</p>
+    <div class="heading-row">
+      <div>
+        <h1 id="tv-shows-title">Explore TV Shows</h1>
+        <p class="heading-description">Discover your next favorite series.</p>
+      </div>
+      <p class="results-count" aria-live="polite">
+        <strong>{{ totalResults() | number }}</strong>
+        {{ totalResults() === 1 ? 'show' : 'shows' }} found
+      </p>
+    </div>
+  </header>
+
+  <form class="filters-panel" [formGroup]="filters" aria-label="Search and filter TV shows">
+    <label class="filter-field search-field">
+      <span>Search by name</span>
+      <input
+        type="search"
+        formControlName="query"
+        placeholder="Try a TV show name..."
+        autocomplete="off"
+      />
+    </label>
+
+    <label class="filter-field">
+      <span>Genre</span>
+      <select formControlName="genreId" [disabled]="isLoadingGenres()">
+        <option value="">All genres</option>
+        @for (genre of genres(); track genre.id) {
+          <option [value]="genre.id">{{ genre.name }}</option>
+        }
+      </select>
+    </label>
+
+    <label class="filter-field">
+      <span>First air year</span>
+      <select formControlName="year">
+        <option value="">Any year</option>
+        @for (year of years; track year) {
+          <option [value]="year">{{ year }}</option>
+        }
+      </select>
+    </label>
+
+    <label class="filter-field">
+      <span>Minimum rating</span>
+      <select formControlName="minimumRating">
+        <option value="">Any rating</option>
+        <option value="5">5+</option>
+        <option value="6">6+</option>
+        <option value="7">7+</option>
+        <option value="8">8+</option>
+      </select>
+    </label>
+
+    <label class="filter-field">
+      <span>Sort by</span>
+      <select formControlName="sortBy">
+        <option value="popularity.desc">Popularity</option>
+        <option value="vote_average.desc">Rating</option>
+        <option value="first_air_date.desc">First air date</option>
+      </select>
+    </label>
+
+    <button class="clear-filters" type="button" (click)="clearFilters()">
+      <svg lucideRotateCcw class="size-4"></svg>
+      Clear filters
+    </button>
+  </form>
+
+  @if (genreErrorMessage(); as message) {
+    <p class="genre-notice" role="status">{{ message }}</p>
+  }
+
+  @if (isLoading()) {
+    <div class="page-state" role="status" aria-live="polite">
+      <span class="loading-spinner" aria-hidden="true"></span>
+      <span>Finding TV shows for you...</span>
+    </div>
+  } @else if (errorMessage(); as message) {
+    <div class="page-state page-error" role="alert">
+      <p>{{ message }}</p>
+      <button class="retry-button" type="button" (click)="loadTvShows(currentPage())">Try again</button>
+    </div>
+  } @else if (tvShows().length === 0) {
+    <div class="page-state empty-state" role="status">
+      <h2>No TV shows found</h2>
+      <p>Try adjusting your search or clearing some filters.</p>
+      <button class="retry-button" type="button" (click)="clearFilters()">Clear filters</button>
+    </div>
+  } @else {
+    <section class="results-section" aria-labelledby="tv-shows-title">
+      <div class="movies-grid">
+        @for (tvShow of tvShows(); track tvShow.id) {
+          <app-movie-card
+            [movie]="tvShow"
+            [saved]="isSaved(tvShow)"
+            (watchlistToggled)="toggleTvShow($event)"
+          />
+        }
+      </div>
+
+      @if (totalPages() > 1) {
+        <nav class="pagination" aria-label="TV show pages">
+          <button
+            class="page-button page-arrow"
+            type="button"
+            aria-label="Previous page"
+            [disabled]="currentPage() === 1"
+            (click)="loadTvShows(currentPage() - 1)"
+          >
+            <svg lucideArrowLeft class="size-4"></svg>
+            <span>Previous</span>
+          </button>
+
+          <div class="page-numbers">
+            @for (page of pageNumbers(); track page) {
+              <button
+                class="page-button page-number"
+                type="button"
+                [attr.aria-label]="'Page ' + page"
+                [attr.aria-current]="page === currentPage() ? 'page' : null"
+                [class.page-current]="page === currentPage()"
+                (click)="loadTvShows(page)"
+              >
+                {{ page }}
+              </button>
+            }
+          </div>
+
+          <button
+            class="page-button page-arrow"
+            type="button"
+            aria-label="Next page"
+            [disabled]="currentPage() >= totalPages()"
+            (click)="loadTvShows(currentPage() + 1)"
+          >
+            <span>Next</span>
+            <svg lucideArrowRight class="size-4"></svg>
+          </button>
+        </nav>
+      }
+    </section>
+  }
+
+  <app-footer />
+</div>

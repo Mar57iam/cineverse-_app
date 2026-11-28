@@ -4,7 +4,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { LucideArrowLeft, LucideArrowRight, LucideRotateCcw } from '@lucide/angular';
 import { Subject, catchError, debounceTime, finalize, of, switchMap } from 'rxjs';
-import { MovieFilters, MovieGenre, MoviePage, TmdbItem } from '../../core/models/tmdb.model';
+import { CatalogFilters, CatalogGenre, CatalogPage, TmdbItem } from '../../core/models/tmdb.model';
 import { MovieCatalogService } from '../../core/services/movie-catalog.service';
 import { Footer } from '../../shared/components/footer/footer';
 import { MovieCard } from '../../shared/components/movie-card/movie-card';
@@ -20,15 +20,15 @@ import { MovieCard } from '../../shared/components/movie-card/movie-card';
     ReactiveFormsModule,
   ],
   selector: 'app-movies',
-  styleUrl: './movies.css',
+  styleUrl: '../../shared/styles/catalog-page.css',
   templateUrl: './movies.html',
 })
 export class Movies {
   private readonly movieCatalogService = inject(MovieCatalogService);
   private readonly destroyRef = inject(DestroyRef);
-  private readonly movieRequests = new Subject<MovieFilters>();
+  private readonly movieRequests = new Subject<CatalogFilters>();
 
-  readonly genres = signal<MovieGenre[]>([]);
+  readonly genres = signal<CatalogGenre[]>([]);
   readonly movies = signal<TmdbItem[]>([]);
   readonly isLoading = signal(true);
   readonly isLoadingGenres = signal(true);
@@ -70,7 +70,7 @@ export class Movies {
         }),
         takeUntilDestroyed(this.destroyRef),
       )
-      .subscribe((response: MoviePage | null) => {
+      .subscribe((response: CatalogPage | null) => {
         if (response) {
           this.movies.set(response.results);
           this.totalResults.set(response.totalResults);

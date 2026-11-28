@@ -41,19 +41,19 @@ export interface HomePageData {
   popularTv: TmdbItem[];
 }
 
-export interface MovieGenre {
+export interface CatalogGenre {
   id: number;
   name: string;
 }
 
-export interface MoviePage {
+export interface CatalogPage {
   results: TmdbItem[];
   page: number;
   totalPages: number;
   totalResults: number;
 }
 
-export interface MovieFilters {
+export interface CatalogFilters {
   query: string;
   genreId: string;
   year: string;
@@ -63,5 +63,20 @@ export interface MovieFilters {
 }
 
 export interface TmdbGenreResponse {
-  genres: MovieGenre[];
+  genres: CatalogGenre[];
+}
+
+export interface TvShowDetails {
+  id: number;
+  name: string;
+  overview: string;
+  backdrop_path: string | null;
+  poster_path: string | null;
+  vote_average: number;
+  first_air_date: string;
+  genres: CatalogGenre[];
+  number_of_seasons: number;
+  number_of_episodes: number;
+  status: string;
+  tagline: string;
 }
